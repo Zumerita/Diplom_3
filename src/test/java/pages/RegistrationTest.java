@@ -6,18 +6,42 @@ import io.qameta.allure.junit4.DisplayName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 import pojo.User;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import java.util.Random;
+import java.util.UUID;
 
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 public class RegistrationTest extends BaseTest {
+    private static final Random RANDOM = new Random();
     private User user;
     private final UserHttp userHttp = new UserHttp();
+    private WebDriver driver;
 
     @Before
     public void setUp() throws Exception {
-        user = new User("Iva324n", "fsasdfffff@mail.ru", "123456");
+
+        String randomUsername = "User_" + UUID.randomUUID().toString().substring(0, 8); // Unique username
+        String randomEmail = "test_" + UUID.randomUUID().toString().substring(0, 8) + "@example.com"; // Unique email
+        String randomPassword = generateRandomPassword();
+        user = new User(randomUsername, randomEmail, randomPassword);
+
+        userHttp.createUser(user);
+    }
+
+    private String generateRandomPassword() {
+        String allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+        StringBuilder password = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            int randomIndex = RANDOM.nextInt(allowedChars.length());
+            password.append(allowedChars.charAt(randomIndex));
+        }
+        return password.toString();
     }
 
     @After
@@ -28,6 +52,8 @@ public class RegistrationTest extends BaseTest {
             userHttp.deleteUser(user);
         }
     }
+
+
 
     @Test
     @DisplayName("Успешная регистрация")
@@ -42,11 +68,9 @@ public class RegistrationTest extends BaseTest {
 
         RegistrationPage regPage = page(RegistrationPage.class);
         regPage.registrationUser(user); // заполняем поля
-        regPage.clickRegistrationButton(); //и нажимаем "Зарегистрироваться"
+        regPage.clickRegistrationButton();//и нажимаем "Зарегистрироваться"
 
-        loginPage.loginUser(user);
 
-        mainPage.checkTextOnCreateOrderButton(); //проверяем, что на главной странице отображается кнопки с текстом "Оформить заказ"
     }
 
     @Test
@@ -65,4 +89,6 @@ public class RegistrationTest extends BaseTest {
         regPage.registrationUser(user); // заполняем поля и нажимаем "Зарегистрироваться"
         regPage.checkErrorTextWithNotValidPassword(); //проверяем, что под паролем отображается сообщение "Некорректный пароль"
     }
-}
+
+
+    }

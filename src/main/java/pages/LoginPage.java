@@ -5,8 +5,8 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import pojo.User;
-
 import static com.codeborne.selenide.Condition.*;
+
 
 public class LoginPage extends BasePage {
 

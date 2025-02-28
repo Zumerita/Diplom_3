@@ -27,5 +27,23 @@ public class ConstructorTest extends BaseTest {
         String expectedText = "Булки";
         Assert.assertEquals(expectedText, mainPage.getNameSelectedSection(expectedText));//Проверяем название выбранного раздела
     }
+
+    @Test
+    @DisplayName("Проверка перехода к разделу Соусы")
+    public void selectSectionSauces() throws InterruptedException {
+        MainPage mainPage = open(URL.BASE_URL, MainPage.class); //открываем главную страницу
+        mainPage.clickSectionSauces(); // Выбираем раздел Соусы
+        String expectedText = "Соусы";
+        Assert.assertEquals(expectedText, mainPage.getNameSelectedSection(expectedText));  //Проверяем название выбранного раздела
+    }
+
+    @Test
+    @DisplayName("Проверка перехода к разделу Начинки")
+    public void selectSectionToppings() throws InterruptedException {
+        MainPage mainPage = open(URL.BASE_URL, MainPage.class); //открываем главную страницу
+        mainPage.clickSectionToppings(); // Выбираем раздел Начинки
+        String expectedText = "Начинки";
+        Assert.assertEquals(expectedText, mainPage.getNameSelectedSection(expectedText)); //Проверяем название выбранного раздела
+    }
 }
 

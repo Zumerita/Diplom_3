@@ -8,19 +8,38 @@ import org.junit.Before;
 import org.junit.Test;
 import pojo.User;
 
+import java.util.Random;
+import java.util.UUID;
+
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.page;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 public class LoginTest extends BaseTest {
+    private static final Random RANDOM = new Random();
     private User user;
     private final UserHttp userHttp = new UserHttp();
 
 
     @Before
     public void setUp() throws Exception {
-        user = new User("Iva324n", "fsasdfffff@mail.ru", "123456");
+
+        String randomUsername = "User_" + UUID.randomUUID().toString().substring(0, 8); // Unique username
+        String randomEmail = "test_" + UUID.randomUUID().toString().substring(0, 8) + "@example.com"; // Unique email
+        String randomPassword = generateRandomPassword();
+        user = new User(randomUsername, randomEmail, randomPassword);
+
         userHttp.createUser(user);
+    }
+
+    private String generateRandomPassword() {
+        String allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+        StringBuilder password = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            int randomIndex = RANDOM.nextInt(allowedChars.length());
+            password.append(allowedChars.charAt(randomIndex));
+        }
+        return password.toString();
     }
 
     @After
